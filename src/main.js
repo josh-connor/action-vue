@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
-import store from './store'
-
+import { loremIpsum } from "lorem-ipsum"
+Object.defineProperty(Vue.prototype, '$lorem', { value: loremIpsum });
 Vue.config.productionTip = false
-
 new Vue({
-  store,
-  render: h => h(App)
+  data:{
+  },
+  render: h => h(App),
+  created() {
+  }
 }).$mount('#app')
