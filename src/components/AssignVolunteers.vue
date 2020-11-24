@@ -4,12 +4,16 @@
       <label>Override Interest <input type="checkbox" v-model="override.interest" name=""></label> <label>Override Requirements <input type="checkbox" v-model="override.requirements" name=""></label> <input v-model="search" placeholder="search">
     </div>
     <h2>Assign Volunteers</h2>
-    <div v-for="volunteer in filterInterested" :key="volunteer.id">
-      <div>{{ volunteer.FirstName }} {{ volunteer.LastName }}</div>
-      <button class="btn btn-success" v-on:click="$emit('assignVolunteer',volunteer)">Assign</button>
-      <button v-if="IsInterested(volunteer)" class="btn btn-danger" v-on:click="$emit('removeInterest', volunteer)">Remove Interest</button>
-      <button v-if="!IsInterested(volunteer)" class="btn btn-primary" v-on:click="$emit('addInterest',volunteer)">Add Interest</button>
-    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" v-for="volunteer in filterInterested" :key="volunteer.id">
+        <div class="btn-group float-right" role="group">
+          <button v-if="IsInterested(volunteer)" class="btn btn-danger" v-on:click="$emit('removeInterest', volunteer)">Remove Interest</button>
+          <button v-if="!IsInterested(volunteer)" class="btn btn-primary" v-on:click="$emit('addInterest',volunteer)">Add Interest</button>
+          <button class="btn btn-success" v-on:click="$emit('assignVolunteer',volunteer)">Assign</button>
+        </div>
+        <a href=""><div>{{ volunteer.FirstName }} {{ volunteer.LastName }}</div></a>
+      </li>
+    </ul>
   </div>
 </template>
 

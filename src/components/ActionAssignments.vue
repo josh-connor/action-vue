@@ -14,10 +14,16 @@
     <div class="row">
       <div class="col">
         <label>Volunteers Assigned</label>
-        <div v-for="volunteer in AssignedVolunteers" :key="volunteer.id">
-          <div>{{ volunteer.FirstName }} {{ volunteer.LastName }}</div>
-          <button class="btn btn-danger" v-on:click="removeVol(volunteer)">Remove</button>
-        </div>
+        <ul id="assignedList" class="list-group list-group-flush mt-3">
+          <li class="list-group-item" v-for="volunteer in AssignedVolunteers" :key="volunteer.id">
+            <button type="button" class="close float-right remove" aria-label="Close" v-on:click="removeVol(volunteer)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <a href=""><div>
+              {{ volunteer.FirstName }} {{ volunteer.LastName }}
+            </div></a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -60,6 +66,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#assignedList{
+  border:3px solid black;
+  overflow-y: auto;
+  height: 400px;
+  }
+.remove {
+  color: red;
+}
 h3 {
   margin: 40px 0 0;
 }

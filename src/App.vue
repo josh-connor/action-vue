@@ -17,6 +17,24 @@
         <action-feedback :Action="Action" :Volunteers="Volunteers" :Assignments="Assignments" class="p-3"></action-feedback>
       </div>
     </div>
+    <div id="myModal"class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Assignment Full</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>This action already has the maximum number of volunteers assigned. To add another volunteer please remove one already assigned by clicking on the X next to their name.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="$('#myModal').modal('hide')">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -109,7 +127,7 @@ export default {
         this.Action.VolunteersInterested = newInterested
         this.Action.VolunteersAssigned.push(id)
       } else {
-        alert("Assignment full. Please remove a volunteer if you want to assign another")
+        $('#myModal').modal('show')
       }
     },
     removeInterest(volunteer) {

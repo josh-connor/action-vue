@@ -23,12 +23,12 @@
         <div class="">
           <label>Public Description</label><br>
           <div v-if="!editable">{{ Action.PublicDescription }}</div>
-          <textarea v-if="editable" type="textarea" v-model="Action.PublicDescription" name=""></textarea>
+          <textarea rows="5" v-if="editable" type="textarea" v-model="Action.PublicDescription" name=""></textarea>
         </div>
         <div class="">
           <label>Private Description</label>
           <div v-if="!editable">{{ Action.PrivateDescription }}</div>
-          <textarea v-if="editable" type="textarea" v-model="Action.PrivateDescription" name=""></textarea>
+          <textarea rows="5" v-if="editable" type="textarea" v-model="Action.PrivateDescription" name=""></textarea>
         </div>
       </div>
       <div class="col">
