@@ -16,6 +16,9 @@
       <div class="col-12 px-2">
         <action-feedback :Action="Action" :Volunteers="Volunteers" :Assignments="Assignments" class="p-3"></action-feedback>
       </div>
+      <div class="col-12 py-3 px-2">
+        <action-occurences :Action="Action" :Occurences="Occurences" class="p-3"></action-occurences>
+      </div>
     </div>
     <div id="myModal"class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -35,6 +38,11 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-8 px-2">
+        <person-detail class="p-3"></person-detail>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,14 +51,18 @@ import ActionDetail from './components/ActionDetail.vue'
 import ActionAssignments from './components/ActionAssignments.vue'
 import AssignVolunteers from './components/AssignVolunteers.vue'
 import ActionFeedback from './components/ActionFeedback.vue'
-
+import ActionOccurences from './components/ActionOccurences.vue'
+import PersonDetail from './components/PersonDetail.vue'
+import datadump from './data.json'
 export default {
   name: 'App',
   components: {
     ActionDetail,
     ActionAssignments,
     AssignVolunteers,
-    ActionFeedback
+    ActionFeedback,
+    ActionOccurences,
+    PersonDetail
   },
   data() {
     return{
@@ -70,6 +82,7 @@ export default {
         VolunteersInterested:[156],
         VolunteersAssigned:[153,184],
         AutoAssign: false,
+        Occurences: [28,29,20,40,57,27],
       },
       Volunteers: [
         {
@@ -106,7 +119,45 @@ export default {
           CompletedDate: "13/11/20",
           feedback: this.$lorem({count:1})
         }
-      ]
+      ],
+      Occurences: [
+        {
+          id: 29,
+          date: "11/10/20",
+          VolunteersAssigned: [182, 156]
+        },
+        {
+          id: 28,
+          date: "12/10/20",
+          VolunteersAssigned: [182, 156]
+        },
+        {
+          id: 20,
+          date: "13/10/20",
+          VolunteersAssigned: [182, 156]
+        },
+        {
+          id: 34,
+          date: "14/10/20",
+          VolunteersAssigned: [182, 156]
+        },
+        {
+          id: 40,
+          date: "15/10/20",
+          VolunteersAssigned: [182, 156]
+        },
+        {
+          id: 57,
+          date: "16/10/20",
+          VolunteersAssigned: [182, 156]
+        },
+        {
+          id: 27,
+          date: "17/10/20",
+          VolunteersAssigned: [182, 156]
+        }
+      ],
+    datadump
     }
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
   <div class="action-module" id="assignVolunteers">
     <div class="float-right">
-      <label>Override Interest <input type="checkbox" v-model="override.interest" name=""></label> <label>Override Requirements <input type="checkbox" v-model="override.requirements" name=""></label> <input v-model="search" placeholder="search">
+      <label>Override Interest <input type="checkbox" v-model="override.interest" class="checkboxinput" name=""></label> <label>Override Requirements <input type="checkbox" class="checkboxinput" v-model="override.requirements" name=""></label> <input v-model="search" placeholder="search">
     </div>
     <h2>Assign Volunteers</h2>
     <ul class="list-group list-group-flush">

@@ -23,6 +23,7 @@
               {{ volunteer.FirstName }} {{ volunteer.LastName }}
             </div></a>
           </li>
+          <li v-if="AssignedVolunteers.length < 1">No volunteers assigned</li>
         </ul>
       </div>
     </div>
@@ -69,7 +70,7 @@ export default {
 #assignedList{
   border:3px solid black;
   overflow-y: auto;
-  height: 400px;
+  max-height: 400px;
   }
 .remove {
   color: red;
