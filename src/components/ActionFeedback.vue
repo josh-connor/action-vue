@@ -1,13 +1,14 @@
 <template>
   <div class="action-module" id="actionFeedback">
-    <table>
+    <h2>Feedback left</h2>
+    <table class="table">
       <tr>
         <td>Volunteer</td>
         <td>Date Completed</td>
         <td>Feedback</td>
       </tr>
       <tr v-for="assignment in Assignments">
-        <td>{{volunteer(assignment.volunteer).FirstName}} {{volunteer(assignment.volunteer).LastName}}</td>
+        <td><a href="">{{volunteer(assignment.volunteer).FirstName}} {{volunteer(assignment.volunteer).LastName}}</a></td>
         <td>{{assignment.CompletedDate}}</td>
         <td>{{assignment.feedback}}</td>
       </tr>
