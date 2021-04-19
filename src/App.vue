@@ -5,19 +5,15 @@
         <action-detail :Action="Action" class="p-3"></action-detail>
       </div>
       <div class="col-md-4 px-2">
-        <action-assignments :Action="Action" :Volunteers="Volunteers" @unassignVolunteer="unassignVolunteer" class="p-3"></action-assignments>
-
+        <action-assignments :Action="Action" :Volunteers="datadump.Volunteers" @unassignVolunteer="unassignVolunteer" class="p-3"></action-assignments>
       </div>
     </div>
     <div class="row">
       <div class="col-12 py-3 px-2">
-        <assign-volunteers :Action="Action" :Volunteers="Volunteers" @removeInterest="removeInterest" @assignVolunteer="assignVolunteer" @addInterest="addInterest" class="p-3"></assign-volunteers>
-      </div>
-      <div class="col-12 px-2">
-        <action-feedback :Action="Action" :Volunteers="Volunteers" :Assignments="Assignments" class="p-3"></action-feedback>
+        <assign-volunteers :Action="Action" :Volunteers="datadump.Volunteers" @removeInterest="removeInterest" @assignVolunteer="assignVolunteer" @addInterest="addInterest" class="p-3"></assign-volunteers>
       </div>
       <div class="col-12 py-3 px-2">
-        <action-occurences :Action="Action" :Occurences="Occurences" class="p-3"></action-occurences>
+        <action-feedback :Action="Action" :Volunteers="datadump.Volunteers" :Assignments="Assignments" class="p-3"></action-feedback>
       </div>
     </div>
     <div id="myModal"class="modal" tabindex="-1" role="dialog">
@@ -51,7 +47,6 @@ import ActionDetail from './components/ActionDetail.vue'
 import ActionAssignments from './components/ActionAssignments.vue'
 import AssignVolunteers from './components/AssignVolunteers.vue'
 import ActionFeedback from './components/ActionFeedback.vue'
-import ActionOccurences from './components/ActionOccurences.vue'
 import PersonDetail from './components/PersonDetail.vue'
 import datadump from './data.json'
 export default {
@@ -61,7 +56,6 @@ export default {
     ActionAssignments,
     AssignVolunteers,
     ActionFeedback,
-    ActionOccurences,
     PersonDetail
   },
   data() {

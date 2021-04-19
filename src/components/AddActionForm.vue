@@ -1,10 +1,10 @@
 <template>
-  <form class="container" novalidate>
+  <form class="container" @submit.prevent="addNewAction">
     <div class="form-group row">
       <label for="helpType" class="col-sm-4 col-lg-4 col-form-label">Help Type</label>
-        <select required v-model="action.helpType" id="helpType" class="form-control select-picker col-10 col-sm-6">
+        <select required v-model="action.help_type" id="helpType" name="helpType" class="form-control select-picker col-10 col-sm-6">
           <option></option>
-          <option :value="type.name" v-for="type in data.HelpTypes">{{type.name}}</option>
+          <option :value="key" v-for="(type,key) in data.HelpTypes">{{type.name}}</option>
         </select>
           <button class="btn btn-secondary rounded-circle ml-3" type="button" data-toggle="modal" data-target="#addNewHelpType"><i class="fas fa-plus"></i></button>
     </div>
@@ -14,11 +14,11 @@
     </div>
     <div class="form-group row">
       <label for="dueDate" class="col-sm-4 col-lg-4 col-form-label">Due Date</label>
-      <input required type="date" class="form-control w-auto col-12 col-sm-8 col-md-auto" id="dueDate" placeholder="">
+      <input required type="date" class="form-control w-auto col-12 col-sm-8 col-md-auto" id="dueDate" placeholder="" v-model="date">
     </div>
     <div class="form-group row">
       <label for="dueTime" class="col-sm-4 col-lg-4 col-form-label">Due Time</label>
-      <input required type="time" class="form-control w-auto col-12 col-sm-8 col-md-auto" id="dueTime" placeholder="">
+      <input required type="time" class="form-control w-auto col-12 col-sm-8 col-md-auto" id="dueTime" placeholder="" v-model="time">
       <div class="invalid-feedback">
         Please set a time.
       </div>
@@ -41,7 +41,7 @@
         <legend  class="col-sm-4 col-lg-4 col-form-label">Volunteer Requirements</legend>
         <div class="col-sm-8 col-lg-8">
           <div class="form-check" v-for="(requirement, key) in data.Requirements" :key="key">
-            <input v-model="action.volunteer_requirements" :id="'requirement' + key" name="checkbox" type="checkbox" class="form-check-input" :value="key"/>
+            <input v-model="action.volunteer_requirements" :id="'requirement' + key" :name="'requirement' + key" type="checkbox" class="form-check-input" :value="key"/>
             <label class="form-check-label" :for="'requirement' + key">
              {{requirement}}
             </label>
@@ -68,14 +68,28 @@ export default {
 
   data () {
     return {
+      date:"",
+      time:"",
+      errors:[]
     }
   },
   props: ['data', 'action'],
+  watch: {
+    date: function(val) {
+      this.action.requested_datetime = val + " " + this.time
+    },
+    time: function(val) {
+      this.action.requested_datetime = this.date + " " + val
+    },
+  },
   methods: {
-    
+    addNewAction: function (e) {
+      this.$emit('new-action')
+    }
   }
 }
 </script>
 
 <style lang="css" scoped>
+
 </style>

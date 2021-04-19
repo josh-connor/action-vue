@@ -20,7 +20,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
             <a href=""><div>
-              {{ volunteer.FirstName }} {{ volunteer.LastName }}
+              {{ volunteer.first_name }} {{ volunteer.last_name }}
             </div></a>
           </li>
           <li v-if="AssignedVolunteers.length < 1">No volunteers assigned</li>

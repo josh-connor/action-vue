@@ -11,7 +11,7 @@
           <button v-if="!IsInterested(volunteer)" class="btn btn-primary" v-on:click="$emit('addInterest',volunteer)">Add Interest</button>
           <button class="btn btn-success" v-on:click="$emit('assignVolunteer',volunteer)">Assign</button>
         </div>
-        <a href=""><div>{{ volunteer.FirstName }} {{ volunteer.LastName }}</div></a>
+        <a href=""><div>{{ volunteer.first_name }} {{ volunteer.last_name }}</div></a>
       </li>
     </ul>
   </div>
@@ -55,7 +55,7 @@ export default {
     },
     filterInterested() {
       return this.InterestedVolunteers.filter( (volunteer) => {
-        return volunteer.FirstName.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 || volunteer.LastName.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
+        return volunteer.first_name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 || volunteer.last_name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
       })
     }
   },

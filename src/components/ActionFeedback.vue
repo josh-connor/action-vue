@@ -8,7 +8,7 @@
         <td>Feedback</td>
       </tr>
       <tr v-for="assignment in Assignments">
-        <td><a href="">{{volunteer(assignment.volunteer).FirstName}} {{volunteer(assignment.volunteer).LastName}}</a></td>
+        <td><a href="">{{volunteer(assignment.volunteer).first_name}} {{volunteer(assignment.volunteer).last_name}}</a></td>
         <td>{{assignment.CompletedDate}}</td>
         <td>{{assignment.feedback}}</td>
       </tr>

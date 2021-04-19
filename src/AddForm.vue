@@ -6,15 +6,17 @@
           <h3>New Actions</h3>
           <div v-for="action in newActions" class="row">
             <div class="col-auto"><a href="">{{data.HelpTypes[(data.Actions[action].help_type)].name}}</a> - {{readableDate(action)}}</div>
-            <div class="float-right"><i class="btn text-danger fas fa-times"></i></div>
+            <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeAction(action)"></i></div>
           </div>
+          <button class="btn btn-secondary my-3">Add New Action</button>
         </div>
         <div>
           <h3>New Referrals</h3>
+          <button class="btn btn-secondary my-3">Add New Referral</button>
         </div>
       </div>
       <div class="col col-lg-7">
-        <add-action-form :action="action" :data="data"></add-action-form>
+        <add-action-form :action="action" :data="data" @new-action="addNewAction()"></add-action-form>
       </div>
     </div>
     <div class="row">
@@ -50,12 +52,15 @@ export default {
     return{
       data,
       action:{
-        helpType:"",
+        help_type:"",
         volunteers_needed: "1",
         action_priority:"2",
         public_description:"",
         private_description:"",
-        volunteer_requirements:[]
+        volunteer_requirements:[],
+        interested_volunteers: [],
+        assigned_voluneteers: [],
+        requested_datetime: "",
       },
       helptype: {
         name:"",
@@ -77,17 +82,29 @@ export default {
   methods: {
     readableDate: function (id) {
       var Action = this.data.Actions[id]
-      var d = new Date(0)
-      d.setUTCSeconds(Action.requested_datetime)
-      const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-      return days[d.getUTCDay()] + " " + d.getUTCDate() + " " + months[d.getUTCMonth()] + " " + d.getUTCHours() + ":" + d.getUTCMinutes()
+      var d = new Date(Action.requested_datetime)
+      return d.toDateString()
+    },
+    removeAction: function (actionID) {
+      bootbox.confirm("Are you sure you want to remove this action?", (result) =>{
+        if (result === true) {
+          this.newActions = this.newActions.filter( (ele) => {
+          return ele != actionID
+          })
+        }
+      })
+    },
+    addNewAction: function () {
+      var actionID = this.newActions.length + 1
+      this.newActions.push(actionID)
+      const newAction = this.action
+      this.data.Actions[actionID] = JSON.parse(JSON.stringify(newAction))
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
