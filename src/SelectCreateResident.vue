@@ -1,51 +1,12 @@
 <template>
   <div id="app" class="container">
     <div class="row">
-      <a class="btn" href="../"><span class="fas fa-angle-left"></span></a><div class="">Selected resident: {{activeResident.id}} - {{activeResident.first_name}} {{activeResident.last_name}}</div>
-    </div>
-    <div class="row">
-      <div class="col col-12 col-md-5">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title">New Actions</h3>
-            <ul class="list-group list-group-flush">
-              <li v-for="action in newActions" class="list-group-item">
-                <a href="">{{data.HelpTypes[(data.Actions[action].help_type)].name}}</a> - {{readableDate(action)}}
-                <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeAction(action)"></i></div>
-              </li>
-            </ul>
-            <div class="text-right">
-              <button class="btn btn-primary my-3" :disabled="buttonsDisabled == 1" @click="createNew = true; formName = 'action'">Add New Action</button>
-            </div>
-          </div>
-        </div>
-        <div class="card mt-4">
-          <div class="card-body">
-            <h3 class="card-title">New Referrals</h3>
-            <ul class="list-group list-group-flush">
-              <li v-for="referral in newReferrals" class="list-group-item">
-                <a href="">{{data.ReferralTypes[(data.Referrals[referral].referral_type)].name}}</a>
-                <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeReferral(referral)"></i></div>
-              </li>
-            </ul>
-            <div class="text-right">
-              <button class="btn btn-primary my-3" :disabled="buttonsDisabled == 1" @click="createNew = true; formName = 'referral'">Add New Referral</button>
-            </div>
-          </div>
-        </div>
+      
+      <div class="col">
+        <select-resident @set-resident="setResident" :Residents="resList"></select-resident>
       </div>
-      <!-- <div class="col-7"><action-view></action-view></div> -->
-      <transition name="fade">
-        <div v-if="createNew && formName == 'action'" class="col col-lg-7">
-          <add-action-form class="" :title="'Create New Action'" :action="action" :data="data" :active-resident="activeResident" @new-action="addNewAction()" @discard-form="createNew = false"></add-action-form>
-        </div>
-        <div v-if="createNew && formName == 'referral'" class="col-lg-7">
-          <add-referral-form class="" :title="'Create New Referral'"  @discard-form="createNew = false" :action="action" :data="data" :active-resident="activeResident"></add-referral-form>
-        </div>
-      </transition>
-    </div>    
-    <!-- Modal -->
-    <add-type-modal :data="data" :helptype="helptype" @set-action-type="setActionType"></add-type-modal>
+    
+    </div>
   </div>
 </template>
 
@@ -57,7 +18,7 @@ import AddTypeModal from "./components/AddTypeModal.vue"
 import SelectResident from "./components/SelectResident.vue"
 import ActionView from "./App.vue"
 export default {
-  name: 'App',
+  name: 'SelectCreateResident',
   components: {
     AddActionForm,
     AddTypeModal,
@@ -91,8 +52,7 @@ export default {
       },
       newActions:[],
       newReferrals:[],
-      resList:[],
-      activeResident: {}
+      resList:[]
     }
   },
   computed: {
@@ -177,12 +137,7 @@ export default {
   mounted () {
     this.fetchResidents()
     var urlParams = new URLSearchParams(window.location.search)
-    $.getJSON(
-      "http://localhost:8000/api/residents/"+urlParams.get('id'),
-      response => {
-        this.activeResident = response
-      }
-    )
+    console.log(urlParams.get('search'))
   }
 }
 </script>

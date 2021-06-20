@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="container">
+  <div id="" class="container">
     <div class="row">
       <div class="col-md-8 px-2">
         <action-detail :Action="Action" class="p-3"></action-detail>

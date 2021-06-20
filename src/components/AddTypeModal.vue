@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="newHelpTypeTitle">Create new Help Type</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="reset" class="close" data-dismiss="modal" aria-label="Close" @click="clearHelpType">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -38,13 +38,13 @@
             <div class="form-group row">
               <label class="col-sm-4 col-lg-4 col-form-label" for="iconPicker">Icon</label>
               <div class="col-1"><i :class="helptype.icon"></i></div>
-              <font-awesome-picker class="w-auto col-11 col-sm-7" id="iconPicker" v-model="helptype.icon"></font-awesome-picker>
+              <font-awesome-picker required class="w-auto col-11 col-sm-7" id="iconPicker" v-model="helptype.icon"></font-awesome-picker>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" v-on:click="createHelpType">Create</button>
+          <button type="reset" class="btn btn-secondary" data-dismiss="modal" @click="clearHelpType">Cancel</button>
+          <button type="submit" class="btn btn-primary" @click="createHelpType">Create</button>
         </div>
       </div>
     </div>
@@ -77,12 +77,20 @@ export default {
       var size = Object.size(this.data.HelpTypes)
       this.helptype.icon = this.icon
       this.data.HelpTypes[size+1] = this.helptype
-      this.action.helpType = this.helptype.name
+      this.$emit('set-action-type', {helptype: size+1})
       this.helptype = {name:"",
         publicDescription:"",
         privateDescription:"",
         requirements:[],
         icon:"fas fa-hand-holding"}
+      $('#addNewHelpType').modal('hide')
+    },
+    clearHelpType: function () {
+      this.helptype = {name:"",
+          publicDescription:"",
+          privateDescription:"",
+          requirements:[],
+          icon:"fas fa-hand-holding"}
       $('#addNewHelpType').modal('hide')
     }
   }

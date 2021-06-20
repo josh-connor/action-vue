@@ -1,9 +1,25 @@
 <template>
   <div class="action-module" id="assignVolunteers">
-    <div class="float-right">
-      <label>Override Interest <input type="checkbox" v-model="override.interest" class="checkboxinput" name=""></label> <label>Override Requirements <input type="checkbox" class="checkboxinput" v-model="override.requirements" name=""></label> <input v-model="search" placeholder="search">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-5">
+        <h2>Assign Volunteers</h2>
+      </div>
+    
+    
+      <div class="col-md-auto">
+        <input type="checkbox" v-model="override.interest" class="checkboxinput" name="orrInterest" id="orrInterest"><label class="ml-3" for="orrInterest">Override Interest</label>
+      </div>
+      
+      <div class="col-md-auto">
+        
+        <input type="checkbox" class="checkboxinput" v-model="override.requirements" name="orrRequirements" id="orrRequirements"><label for="orrRequirements" class="ml-3">Override Requirements</label>
+      </div>
+      
+      <div class="col">
+        <input class="form-control" type="search" v-model="search" placeholder="search">
+      </div>
+      
     </div>
-    <h2>Assign Volunteers</h2>
     <ul class="list-group list-group-flush">
       <li class="list-group-item" v-for="volunteer in filterInterested" :key="volunteer.id">
         <div class="btn-group float-right" role="group">

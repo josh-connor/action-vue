@@ -84,13 +84,17 @@
     "5":"Enhanced DBS check"
   },
   "Residents": [
-    {
+    { 
+      "id": 123,
       "first_name": "John",
-      "last_name": "Smith"
+      "last_name": "Smith",
+      "address_line_1": "123 Fake street"
     },
-    {
+    { 
+      "id": 321,
       "first_name": "Jane",
-      "last_name": "Smithe"
+      "last_name": "Smithe",
+      "address_line_1": "321 Nowhere Road"
     }
   ],
   "Volunteers": [
