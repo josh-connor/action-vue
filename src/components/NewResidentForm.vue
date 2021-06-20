@@ -209,7 +209,7 @@ export default {
     }
   },
   mounted: function(){
-    /*jQuery('[data-toggle="tooltip"]').tooltip()
+    /*$('[data-toggle="tooltip"]').tooltip()
     //Bootstrap validation
     'use strict'
 

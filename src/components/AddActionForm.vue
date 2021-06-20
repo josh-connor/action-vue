@@ -131,12 +131,51 @@ export default {
         console.log('not valid')
       } else {
         console.log(event)
-        this.addNewAction()
+        this.addNewAction(event)
       }
       event.target.classList.add('was-validated')
     },
-    addNewAction: function () {
-      this.$emit('new-action')
+    addNewAction: function (e) {
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+      const csrftoken = getCookie('csrftoken');
+      console.log(e)
+      var action = JSON.stringify(this.action)
+      console.log(action)
+      if (!e.target.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          } else{
+            event.preventDefault()
+            event.stopPropagation()
+            $.ajax({
+        url: "/api/actions/",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', csrftoken)
+        },
+        method: "POST",
+        type:"POST",
+        contentType:'application/json',
+        data:action,
+        success: function(response){
+          console.log(response.id)
+        }
+      })
+          }
+          e.target.classList.add('was-validated')
     },
     discardForm: function () {
       bootbox.confirm("Are you sure you want to discard this action?", (result) =>{
