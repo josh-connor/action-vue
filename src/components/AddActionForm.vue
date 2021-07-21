@@ -12,7 +12,7 @@
       <div class="col-10 col-sm-6">
         <select required v-model="action.help_type" id="helpType" name="helpType" class="form-control select-picker">
           <option></option>
-          <option :value="key" v-for="(type,key) in data.HelpTypes">{{type.name}}</option>
+          <option :value="type.id" v-for="(type,index) in helpTypes">{{type.name}}</option>
         </select>
         <div class="invalid-feedback">Please select a Help Type</div>
       </div>
@@ -103,7 +103,8 @@ export default {
       date:"",
       time:"",
       errors:[],
-      formValidated: false
+      formValidated: false,
+      helpTypes: []
     }
   },
   props: ['data', 'action', 'activeResident','title'],
@@ -130,31 +131,13 @@ export default {
       if (!event.target.checkValidity()) {
         console.log('not valid')
       } else {
-        console.log(event)
         this.addNewAction(event)
       }
       event.target.classList.add('was-validated')
     },
     addNewAction: function (e) {
-      function getCookie(name) {
-          let cookieValue = null;
-          if (document.cookie && document.cookie !== '') {
-              const cookies = document.cookie.split(';');
-              for (let i = 0; i < cookies.length; i++) {
-                  const cookie = cookies[i].trim();
-                  // Does this cookie string begin with the name we want?
-                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                      break;
-                  }
-              }
-          }
-          return cookieValue;
-      }
-      const csrftoken = getCookie('csrftoken');
-      console.log(e)
+      const csrftoken = this.getCookie('csrftoken');
       var action = JSON.stringify(this.action)
-      console.log(action)
       if (!e.target.checkValidity()) {
             event.preventDefault()
             event.stopPropagation()
@@ -170,8 +153,8 @@ export default {
         type:"POST",
         contentType:'application/json',
         data:action,
-        success: function(response){
-          console.log(response.id)
+        success: (response) =>{
+          this.$emit('new-action', response)
         }
       })
           }
@@ -192,7 +175,7 @@ export default {
   },
   computed: {
   },
-  mounted: function () {
+  created: function () {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -207,6 +190,12 @@ export default {
     today = yyyy+'-'+mm+'-'+dd;
     document.getElementById("dueDate").setAttribute("min", today);
 
+    $.getJSON(
+      "http://localhost:8000/api/helptypes/",
+      response => {
+        this.helpTypes = response.results
+      }
+    )
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="action-module" id="actionDetils">
-    <div v-for="ActionID in ActionsToRender">
-      <single-action :ActionID="ActionID"></single-action>
+    <div class="list-group">
+      <single-action v-for="Action in ActionsToRender" :Action="Action"></single-action>
     </div>
   </div>
 </template>
@@ -13,14 +13,17 @@ export default {
   name: 'ActionList',
   data() {
     return{
-      Actions: data.Actions
     }
+  },
+  computed:{
   },
   props: {
     ActionsToRender: Array
   },
   components: {
     SingleAction
+  },
+  created(){
   }
 }
 </script>

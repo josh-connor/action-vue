@@ -1,64 +1,77 @@
 <template>
-  <div class="action-module" id="actionDetils">
-    <button v-if="!editable" class="btn float-right" v-on:click="editable = true">Edit</button>
-    <button v-if="editable" class="btn float-right" v-on:click="editable = false">Save</button>
-    <h2>Action Details</h2>
-    
-    <div class="row">
-      <div class="col-md-7">
-        <div class="">
-          <label>Resident Name</label>
-          <div>{{ Action.ResidentName }}</div>
-        </div>
-        <div class="">
-          <label>Action Type</label>
-          <div v-if="!editable">{{ Action.ActionType }}</div>
-          <div v-if="editable">
-            <select v-model="Action.ActionType">
-            <option>Dog Walking</option>
-            <option>Food Delivery</option>
-          </select>
-        </div>
-        </div>
-        <div class="">
-          <label>Public Description</label><br>
-          <div v-if="!editable">{{ Action.PublicDescription }}</div>
-          <textarea rows="5" v-if="editable" type="textarea" v-model="Action.PublicDescription" name=""></textarea>
-        </div>
-        <div class="">
-          <label>Private Description</label>
-          <div v-if="!editable">{{ Action.PrivateDescription }}</div>
-          <textarea rows="5" v-if="editable" type="textarea" v-model="Action.PrivateDescription" name=""></textarea>
-        </div>
+  <div class="action-module card" id="actionDetils">
+    <div class="card-header">
+      <h2 class="card-title d-inline-block">Action Details</h2>
+      <div class="float-right btn-group">
+        <button v-if="!editable" class="btn btn-secondary" v-on:click="editable = true">Edit</button>
+        <button v-if="editable" class="btn btn-danger" v-on:click="discardDetails">Discard</button>
+        <button v-if="editable" class="btn btn-success" v-on:click="saveDetails">Save Changes</button>
       </div>
-      <div class="col">
-        <div class="">
-          <label>Due Date</label>
-          <div>{{ Action.DueDate }}</div>
-        </div>
-        <div class="">
-          <label>Due Time</label>
-          <div>{{ Action.DueTime }}</div>
-        </div>
-        <div class="">
-          <label>Priority</label>
-          <div v-if="!editable">{{ Action.ActionPriority }}</div>
-          <div v-if="editable">
-            <select v-model="Action.ActionPriority">
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
+      
+    </div>
+    
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-7 form-group">
+          <div class="detail-field form-group">
+            <label class="col-form-label">Resident</label>
+            <div v-if="!editable">{{ activeResident.first_name }} {{ activeResident.last_name }}</div>
+            <input class="form-control" type="text" name="name" readonly disabled v-if="editable" v-model="fullName">
+          </div>
+          <div class="detail-field form-group"">
+            <label for="helpType" class="col-form-label">Action Type</label>
+            <div v-if="!editable">{{ HelpType }}</div>
+            <select class="form-control" v-if="editable" id="helpType" v-model="action_details.help_type">
+              <option v-for="type in helpTypes" :value="type.id">{{type.name}}</option>
             </select>
           </div>
+          <div class="detail-field form-group">
+            <label for="publicDescription" class="col-form-label">Public Description</label><button v-if="editable" class="btn float-right btn-secondary btn-sm" @click="CopyDefaultDescription('public')">Use Default</button><br>
+            <div v-if="!editable">{{ action_details.public_description }}</div>
+            <textarea class="form-control" id="publicDescription" rows="5" v-if="editable" type="textarea" v-model="action_details.public_description" name=""></textarea>
+          </div>
+          <div class="detail-field form-group">
+            <label for="privateDescription" class="col-form-label">Private Description</label><button v-if="editable" class="btn float-right btn-secondary btn-sm" @click="CopyDefaultDescription('private')">Use Default</button>
+            <div v-if="!editable">{{ action_details.private_description }}</div>
+            <textarea id="privateDescription" class="form-control" rows="5" v-if="editable" type="textarea" v-model="action_details.private_description" name=""></textarea>
+          </div>
         </div>
-        <div class="">
-          <label>Volunteer Requirements</label>
-          <div>
-            <ul>
-              <li v-for="requirement in Action.requirements" :key="requirement.name">
-                {{ requirement.name }}
-              </li>
-            </ul>
+        <div class="col">
+          <div class="detail-field form-group">
+            <label for="dueDate" class="col-form-label">Due Date</label>
+            <div v-if="!editable">{{ DueDate }}</div>
+            <input v-if="editable" required type="date" class="form-control w-auto" id="dueDate" placeholder="" v-model="date">
+          </div>
+          <div class="detail-field form-group">
+            <label for="dueTime" class="col-form-label" >Due Time</label>
+            <div v-if="!editable">{{ DueTime }}</div>
+            <input v-if="editable" required type="time" class="form-control w-auto" id="dueTime" placeholder="" v-model="time">
+          </div>
+          <div class="detail-field form-group">
+            <label for="actionPriority" class="col-form-label">Priority</label>
+            <div v-if="!editable">{{ Priority }}</div>
+            <div v-if="editable">
+              <select id="actionPriority" name="actionPriority" class="form-control" v-model="action_details.action_priority">
+                <option value="3">High</option>
+                <option value="2">Normal</option>
+                <option value="1">Low</option>
+              </select>
+            </div>
+          </div>
+          <div class="detail-field form-group">
+            <label for="volRequirements" class="col-form-label">Volunteer Requirements</label>
+            <div>
+              <ul v-if="!editable">
+                <li v-for="requirement in action_details.requirements">
+                  {{ Requirement(requirement) }}
+                </li>
+              </ul>
+              <div v-if="editable">
+                <div class="form-check" v-for="requirement in requirements">
+                  <input id="volRequirements" class="form-check-input" v-model="action_details.requirements" type="checkbox" :name="requirement.name" :id="requirement.name" :value="requirement.id"><label class="form-check-label" :for="requirement.name">{{ requirement.name }}</label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -71,11 +84,92 @@ export default {
   name: 'ActionDetail',
   data() {
     return{
-      editable: false
+      editable: false,
+      requirements:{},
+      priorities:{
+        1:"Low",
+        2:"Normal",
+        3:"High"
+      },
+      date:"",
+      time:""
     }
   },
   props: {
-    Action: Object
+    action_details: Object,
+    helpTypes: Object,
+    activeResident: Object
+  },
+  watch: {
+    date: function(val) {
+      this.action_details.requested_datetime = val + " " + this.time
+    },
+    time: function(val) {
+      this.action_details.requested_datetime = this.date + " " + val
+    },
+    editable: function(val) {
+      if(this.action_details){
+        var arr = this.action_details.requested_datetime.split("T")
+        arr[1] = arr[1].slice(0,-1)
+        this.$set(this, "date", arr[0])
+        this.$set(this, "time", arr[1])
+      }
+    }
+  },
+  computed:{
+    fullName: {
+      get() {
+        return `${this.activeResident.first_name} ${this.activeResident.last_name}`;
+      },
+      set(newValue) {
+        const m = newValue.match(/(\S*)\s+(.*)/);
+
+        this.activeResident.first_name = m[1];
+        this.activeResident.last_name = m[2];
+      }
+    },
+    HelpType: function() {
+      var id = this.action_details.help_type
+      if (this.helpTypes[id]){
+      return this.helpTypes[id].name} else {
+        return ""
+      }
+    },
+    DueDate: function(){
+      var d = new Date(this.action_details.requested_datetime)
+      return d.toDateString()
+    },
+    DueTime: function(){
+      var d = new Date(this.action_details.requested_datetime)
+      return d.toTimeString()
+    },
+    Priority: function(){
+      return this.priorities[this.action_details.action_priority]
+    }
+  },
+  methods: {
+    Requirement: function(id){
+      return this.requirements[id].name
+    },
+    CopyDefaultDescription (type){
+      if (type === "public") {
+        this.action_details.public_description = this.helpTypes[this.action_details.help_type].public_description_template
+      } else if (type === "private"){
+        this.action_details.private_description = this.helpTypes[this.action_details.help_type].private_description_template
+      }
+
+    },
+    discardDetails(){
+      this.editable = false
+      this.$emit("discard")
+    },
+    saveDetails(){
+      this.editable = false
+      this.$emit("save")
+    }
+  },
+  created() {
+    this.getRequirements()
   }
 }
 </script>
@@ -87,7 +181,10 @@ textarea {
   height: auto;
 }
 label {
-  margin: 40px 0 0;
+  margin-bottom: 0.25rem;
+  /*font-weight: bold;*/
+}
+.detail-field > label{
   font-weight: bold;
 }
 ul {
@@ -95,8 +192,7 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
-  margin: 0 10px;
+  margin: 0;
 }
 a {
   color: #42b983;

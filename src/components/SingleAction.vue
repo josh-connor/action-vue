@@ -1,19 +1,14 @@
 <template>
-  <div class="" :id="'singleAction'+ActionID">
-    {{ActionType(ActionID)}}<br>
-    {{ActionDate(ActionID)}}
+  <div class="list-group-item" :id="'singleAction'+Action.id">
+    {{Action}}
   </div>
 </template>
 
 <script>
-import data from '../data.json'
-
 export default {
   name: 'SingleAction',
   data() {
     return{
-      Actions: data.Actions,
-      HelpTypes: data.HelpTypes
     }
   },
   methods: {
@@ -29,7 +24,7 @@ export default {
     }
   },
   props: {
-    ActionID: Number
+    Action: Object
   },
   components: {
   }

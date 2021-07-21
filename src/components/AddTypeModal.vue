@@ -74,9 +74,9 @@ export default {
         }
         return size;
       };
-      var size = Object.size(this.data.HelpTypes)
+      var size = Object.size(this.help_types)
       this.helptype.icon = this.icon
-      this.data.HelpTypes[size+1] = this.helptype
+      this.help_types[size+1] = this.helptype
       this.$emit('set-action-type', {helptype: size+1})
       this.helptype = {name:"",
         publicDescription:"",
