@@ -12,7 +12,7 @@
       <div class="col-10 col-sm-6">
         <select required v-model="action.help_type" id="helpType" name="helpType" class="form-control select-picker">
           <option></option>
-          <option :value="type.id" v-for="(type,index) in helpTypes">{{type.name}}</option>
+          <option :value="type.id" v-for="(type,index) in help_types">{{type.name}}</option>
         </select>
         <div class="invalid-feedback">Please select a Help Type</div>
       </div>
@@ -39,7 +39,7 @@
       <div class="row">
         <legend class="col-sm-4 col-lg-4 col-form-label">Priority</legend>
         <div class="col-sm-8 col-lg-6">
-          <div v-for="(priority, key) in data.Priorities" :key="key" class="form-check">
+          <div v-for="(priority, key) in action_priorities" :key="key" class="form-check">
             <input v-model="action.action_priority" class="form-check-input ignore-validation" type="radio" name="actionPriority" :id="'priorityRadio' + key" :value="key">
             <label class="form-check-label" :for="'priorityRadio' + key">
               {{priority}}
@@ -59,10 +59,10 @@
       <div class="row">
         <legend  class="col-sm-4 col-lg-4 col-form-label">Volunteer Requirements</legend>
         <div class="col-sm-8 col-lg-8">
-          <div class="form-check" v-for="(requirement, key) in data.Requirements" :key="key">
+          <div class="form-check" v-for="(requirement, key) in requirements" :key="key">
             <input v-model="action.volunteer_requirements" :id="'requirement' + key" :name="'requirement' + key" type="checkbox" class="form-check-input ignore-validation" :value="key"/>
             <label class="form-check-label" :for="'requirement' + key">
-             {{requirement}}
+             {{requirement.name}}
             </label>
           </div>
         </div>
@@ -103,11 +103,10 @@ export default {
       date:"",
       time:"",
       errors:[],
-      formValidated: false,
-      helpTypes: []
+      formValidated: false
     }
   },
-  props: ['data', 'action', 'activeResident','title'],
+  props: ['action', 'activeResident','title', 'requirements','help_types'],
   watch: {
     date: function(val) {
       this.action.requested_datetime = val + " " + this.time
@@ -175,7 +174,7 @@ export default {
   },
   computed: {
   },
-  created: function () {
+  mounted: function () {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -190,12 +189,6 @@ export default {
     today = yyyy+'-'+mm+'-'+dd;
     document.getElementById("dueDate").setAttribute("min", today);
 
-    $.getJSON(
-      "http://localhost:8000/api/helptypes/",
-      response => {
-        this.helpTypes = response.results
-      }
-    )
   }
 }
 </script>

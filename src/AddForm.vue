@@ -26,7 +26,7 @@
             <h3 class="card-title">New Referrals</h3>
             <ul class="list-group list-group-flush">
               <li v-for="referral in newReferrals" class="list-group-item">
-                <a href="">{{data.ReferralTypes[(data.Referrals[referral].referral_type)].name}}</a>
+                <a href="">{{}}</a>
                 <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeReferral(referral)"></i></div>
               </li>
             </ul>
@@ -39,20 +39,19 @@
       <!-- <div class="col-7"><action-view></action-view></div> -->
       <transition name="fade">
         <div v-if="createNew && formName == 'action'" class="col col-lg-7">
-          <add-action-form class="" :title="'Create New Action'" :action="action" :data="data" :active-resident="activeResident" @new-action="addNewAction($event)" @discard-form="discardForm"></add-action-form>
+          <add-action-form class="" :title="'Create New Action'" :action="action" :requirements="requirements" :active-resident="activeResident" :help_types="help_types" @new-action="addNewAction($event)" @discard-form="discardForm"></add-action-form>
         </div>
         <div v-if="createNew && formName == 'referral'" class="col-lg-7">
-          <add-referral-form class="" :title="'Create New Referral'"  @discard-form="discardForm" :action="action" :data="data" :active-resident="activeResident" :referral="referral" :referralTypes="referralTypes" :organisations="organisations"  @new-referral="addNewReferral($event)"></add-referral-form>
+          <add-referral-form class="" :title="'Create New Referral'"  @discard-form="discardForm" :action="action" :active-resident="activeResident" :referral="referral" :referralTypes="referralTypes" :organisations="organisations"  @new-referral="addNewReferral($event)"></add-referral-form>
         </div>
       </transition>
     </div>    
     <!-- Modal -->
-    <add-type-modal :data="data" :helptype="helptype" @set-action-type="setActionType"></add-type-modal>
+    <add-type-modal :requirements="requirements" @new-helptype="addNewHelpType($event)"></add-type-modal>
   </div>
 </template>
 
 <script>
-import data from './data.json'
 import AddActionForm from "./components/AddActionForm.vue"
 import AddReferralForm from "./components/AddReferralForm.vue"
 import AddTypeModal from "./components/AddTypeModal.vue"
@@ -67,12 +66,11 @@ export default {
   },
   data() {
     return{
-      data,
       createNew: false,
       formName: "",
       action:{
         resident:-1,
-        help_type_id:"",
+        help_type:"",
         volunteers_needed: "1",
         action_priority:"2",
         public_description:"",
@@ -93,13 +91,6 @@ export default {
         added_by:3,
         coordinator:3
       },
-      helptype: {
-        name:"",
-        publicDescription:"",
-        privateDescription:"",
-        requirements:[],
-        icon:"fas fa-hand-holding"
-      },
       newActions:[],
       newReferrals:[],
       residents:[],
@@ -108,13 +99,18 @@ export default {
       help_types: {},
       residentReferrals: [],
       referralTypes:[],
-      organisations:[]
+      organisations:[],
+      requirements:{}
+    }
+  },
+  watch:{
+    help_type_id: function(value){
+      this.action.public_description = this.help_types[value].public_description_template
     }
   },
   computed: {
-    icon: function () {
-      var icn = this.helptype.icon.split(" ")
-      return icn[1]
+    help_type_id: function () {
+      return this.action.help_type
     },
     buttonsDisabled: function () {
       if (this.createNew) {
@@ -160,6 +156,10 @@ export default {
       console.log(e)
       this.residentActions.push(e)
     },
+    addNewHelpType: function(e) {
+      this.help_types[e.id] = e
+      this.action.help_type = e.id
+    },
     addNewReferral: function (e) {
       console.log(e)
       this.residentReferrals.push(e)
@@ -167,9 +167,6 @@ export default {
     setResident: function (e) {
       this.action.resident = e.id
       this.referral.resident = e.id
-    },
-    setActionType: function (e) {
-      this.action.help_type = e.helptype
     },
     discardForm (){
       this.createNew = false
@@ -188,21 +185,13 @@ export default {
         coordinator:3
       }
       this.action.resident = this.activeResident.id
-      this.referral = {
-        resident:-1,
-        referral_type:"",
-        referral_organisation:"",
-        notes:"",
-        status:1,
-        added_by:3,
-        coordinator:3
-      }
       this.referral.resident = this.activeResident.id
     }
   },
   async created () {
     this.getResidents()
     this.getHelpTypes()
+    this.getRequirements()
     this.getList("referraltypes",(data)=>{this.setData(data, "referralTypes")})
     const getOrganisations = await this.getList("organisations",(data)=>{this.setData(data, "organisations")})
     this.getList("referrals",(data)=>{this.setData(data, "residentReferrals")})

@@ -35,6 +35,10 @@ Vue.mixin({
       }
     },
     methods:{
+      readableDate: function (datetime) {
+        var d = new Date(datetime)
+        return d.toDateString()
+      },
       baseURL: function(){
         return window.location.origin
       },

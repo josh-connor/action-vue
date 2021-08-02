@@ -2,16 +2,24 @@
   <div class="action-module" id="actionFeedback">
     <h2>Feedback left</h2>
     <table class="table">
-      <tr>
-        <td>Volunteer</td>
-        <td>Date Completed</td>
-        <td>Feedback</td>
-      </tr>
-      <tr v-for="assignment in Assignments">
-        <td><a href="">{{volunteer(assignment.volunteer).first_name}} {{volunteer(assignment.volunteer).last_name}}</a></td>
-        <td>{{assignment.CompletedDate}}</td>
-        <td>{{assignment.feedback}}</td>
-      </tr>
+      <thead class="thead-light">
+        <tr>
+          <th>Date Completed</th>
+          <th>Volunteer</th>
+          <th>Time Taken</th>
+          <th>Feedback</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="feedback, key in action_feedback" :key="key" :id="'feedbackRow'+feedback.id">
+          <td>{{readableDate(feedback.created_date_time)}}</td>
+          <td><a href="">{{volunteerName(feedback.volunteer).first_name}} {{volunteerName(feedback.volunteer).last_name}}</a></td>
+          <td>{{feedback.time_taken}}</td>
+          <td>{{feedback.notes}}</td>
+          <td><div class="btn-group"><button class="btn btn-secondary btn-sm" type="button">Edit</button><button class="btn btn-danger btn-sm" type="button">Delete</button></div></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>
@@ -21,18 +29,33 @@ export default {
   name: 'ActionFeedback',
   data() {
     return {
-
+      action_feedback: []
     }
   },
   props: {
-    Action: Object,
+    action_details: Object,
     Volunteers: Array,
     Assignments: Array
   },
   methods:{
-    volunteer(id) {
-      return this.Volunteers.find(vol => vol.id === id)
+    volunteerName(id) {
+      return this.Volunteers.find(vol => vol.pk === id)
+    },
+    getFeedback: function(action_feedback_id_array) {
+      $.getJSON(
+        this.baseURL()+"/api/action_feedback/isin/"+action_feedback_id_array.toString()+"/",
+        response => {
+          if(response.next !== null) {
+            this.multiPageGetLoop(response.next, response.results, this.setData, "action_feedback")
+          } else {
+            this.$set(this, "action_feedback", response.results)
+          }
+        }
+      )
     }
+  },
+  created(){
+    this.getFeedback("1,2")
   }
 }
 </script>

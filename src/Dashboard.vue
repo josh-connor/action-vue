@@ -123,7 +123,7 @@
                   <list-sort-header :sorting="sorting" table="referralTable" target="referral_status" heading="Status"></list-sort-header>
                 </tr>
               </thead>
-              <tr v-for="ref in referrals">
+              <tr v-for="ref, key in referrals" :key="key">
                 <td>{{ref.id}}</td>
                 <td><a class="text-info" :href="'/actions/coordinator/referral/?id='+ref.id">{{referralTypeName(ref)}}</a></td>
                 <td>{{residentsName(ref.resident, "full")}}</td>
@@ -176,10 +176,6 @@ export default {
 
   },
   methods: {
-    readableDate: function (datetime) {
-      var d = new Date(datetime)
-      return d.toDateString()
-    },
     helpTypeName(id){
       return this.help_types[id].name
     },

@@ -13,7 +13,7 @@
         <assign-volunteers :action_details="action_details" :Volunteers="volunteers_array" @removeInterest="removeInterest" @assignVolunteer="assignVolunteer" @addInterest="addInterest" class=""></assign-volunteers>
       </div>
       <div class="col-12 py-3 px-2">
-        <action-feedback :Action="action_details" :Volunteers="volunteers_array" class="p-3"></action-feedback>
+        <action-feedback :action_details="action_details" :Volunteers="volunteers_array" class="p-3"></action-feedback>
       </div>
     </div>
     <div id="myModal"class="modal" tabindex="-1">

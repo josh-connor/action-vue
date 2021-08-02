@@ -17,7 +17,7 @@
         <div class="col-md-7 form-group">
           <div class="detail-field form-group">
             <label class="" for="name">Resident</label>
-            <a :href="'/actions/coordinator/resident/?id='+activeResident.id" class="text-info"><div v-if="!editable">{{ activeResident.first_name }} {{ activeResident.last_name }}</div></a>
+            <a :href="'/actions/coordinator/resident/?id='+activeResident.id" class="text-info"><div v-if="!editable">{{ fullName }}</div></a>
             <input class="form-control" type="text" name="name" readonly disabled v-if="editable" v-model="fullName">
           </div>
           <div class="detail-field form-group"">
@@ -125,10 +125,11 @@ export default {
   },
   watch: {
     date: function(val) {
-      this.action_details.requested_datetime = val + " " + this.time
+      this.action_details.requested_datetime = val + "T" + this.time + "Z"
     },
     time: function(val) {
-      this.action_details.requested_datetime = this.date + " " + val
+      var dt = new Date()
+      this.action_details.requested_datetime = this.date + "T" + val + "Z"
     },
     editable: function(val) {
       if(this.action_details){
@@ -140,6 +141,13 @@ export default {
     }
   },
   computed:{
+    localDate(){
+      var startTimeISOString = this.action_details.requested_datetime;
+
+      var startTime = new Date(startTimeISOString)
+      var startTime2 =   new Date( startTime.getTime() + ( startTime.getTimezoneOffset() * 60000 ) )
+      return startTime2
+    },
     fullName: {
       get() {
         return `${this.activeResident.first_name} ${this.activeResident.last_name}`;
@@ -160,11 +168,11 @@ export default {
     },
     DueDate: function(){
       var d = new Date(this.action_details.requested_datetime)
-      return d.toDateString()
+      return d.toLocaleDateString()
     },
     DueTime: function(){
       var d = new Date(this.action_details.requested_datetime)
-      return d.toTimeString()
+      return d.toLocaleTimeString()
     },
     Priority: function(){
       return this.priorities[this.action_details.action_priority]
