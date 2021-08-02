@@ -4,6 +4,7 @@ import AddActionRef from './AddForm.vue'
 import SelectCreateResident from './SelectCreateResident.vue'
 import SingleActionView from './SingleAction.vue'
 import Dashboard from './Dashboard.vue'
+import ActionsList from './ActionsList.vue'
 import bootbox from "bootbox"
 import { loremIpsum } from "lorem-ipsum"
 Object.defineProperty(Vue.prototype, '$lorem', { value: loremIpsum });
@@ -127,6 +128,18 @@ Vue.mixin({
           }
         )
       },
+      getFeedback: function(action_feedback_id_array) {
+        $.getJSON(
+          this.baseURL()+"/api/action_feedback/isin/"+action_feedback_id_array.toString()+"/",
+          response => {
+            if(response.next !== null) {
+              this.multiPageGetLoop(response.next, response.results, this.setData, "action_feedback")
+            } else {
+              this.$set(this, "action_feedback", response.results)
+            }
+          }
+        )
+      },
       getHelpTypes: function(){
         const setHelpTypeObject = (help_types_array) =>{
           for (var i = help_types_array.length - 1; i >= 0; i--) {
@@ -171,7 +184,7 @@ Vue.mixin({
           this.baseURL()+"/api/requirements/",
           response => {
             if(response.next !== null) {
-              this.multiPageGetLoop(response.next, response.results, setHelpTypeObject)
+              this.multiPageGetLoop(response.next, response.results, setRequirementsObject)
             } else {
               setRequirementsObject(response.results)
             }
@@ -208,6 +221,15 @@ new Vue({
   created() {
   }
 }).$mount('#dashboard')
+}
+if($("#actionsList").length){
+new Vue({
+  data:{
+  },  
+  render: h => h(ActionsList),
+  created() {
+  }
+}).$mount('#actionsList')
 }
 if($("#addActionRef").length){
 new Vue({

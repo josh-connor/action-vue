@@ -57,7 +57,8 @@ export default {
     action_details:{},
     help_types:{},
     activeResident:{},
-    volunteers_array:[]
+    volunteers_array:[],
+    feedback:[]
     }
   },
   computed: {
@@ -132,6 +133,7 @@ export default {
       var success = (data) =>{
         this.setData(data, "action_details")
         this.getSingle("residents",data.resident,this.setData,"activeResident")
+        if(data.actionfeedback_set.length()>0){this.getFeedback(data.actionfeedback_set)}
       }
       this.getSingle("actions",urlParams.get('id'),success)
     },

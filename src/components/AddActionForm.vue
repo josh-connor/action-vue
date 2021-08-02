@@ -48,12 +48,21 @@
         </div>
       </div>
     </fieldset>
-    <div class="form-group row">
-      <label for="volNeeded" class="col-sm-4 col-lg-4 col-form-label">Volunteers Needed</label>
-      <div class="col-4">
-        <input type="number" v-model="action.volunteers_needed" class="form-control" id="volNeeded" aria-describedby="" placeholder="" value="1" min="1">
+    <div class="row form-group flex-wrap validate-me">
+      <div class="col-12 detail-field"><label class="">Number of Volunteers</label></div>
+      <div class="col detail-field">
+        <div class="row flex-wrap">
+          <label for="minimumVolunteers" class="col-form-label col-auto">Minimum</label>
+          <input class="form-control col" type="number" name="minimumVolunteers" min="1" :max="action.maximum_volunteers"v-model="action.minimum_volunteers">
+          <div class="invalid-feedback col-12">Cannot be more than max or less than 1</div>
+        </div>
+    </div>
+    <div class="col detail-field">
+      <div class="row">
+          <label for="maximumVolunteers" class="col-form-label col-auto">Maximum</label>
+          <input class="form-control col" type="number" :min="action.minimum_volunteers" name="maximumVolunteers" v-model="action.maximum_volunteers"><div class="invalid-feedback col-12">Cannot be less than min</div>
+        </div>
       </div>
-      
     </div>
     <fieldset class="form-group">
       <div class="row">

@@ -1,5 +1,6 @@
 <template>
   <div class="" id="dashboardVue">
+    <button class="btn btn-lg btn-primary" type="button" @click="startCall ">Start Call</button>
     <div class="row no-gutters align-items-stretch">
       <div class="col card">
           <div class="card-header">
@@ -10,7 +11,6 @@
             <table class="table table-striped table-responsive-lg col-auto col-sm">
               <thead class="thead-light">
                 <tr>
-                  <th>id</th>
                   <list-sort-header :sorting="sorting" table="actionTable" target="help_type" heading="Help Type"></list-sort-header>
                   <th>Resident</th>
                   <list-sort-header :sorting="sorting" table="actionTable" target="requested_datetime" heading="Due"></list-sort-header>
@@ -21,7 +21,6 @@
               </thead>
               <tbody>
                 <tr v-for="action in filterTable('actionTable','sortedActions')">
-                  <td>{{action.id}}</td>
                   <td><a class="text-info" :href="'/actions/coordinator/action/?id='+action.id">{{helpTypeName(action.help_type)}}</a></td>
                   <td>{{residentsName(action.resident, "full")}}</td>
                   <td>{{readableDate(action.requested_datetime)}}</td>
@@ -176,6 +175,9 @@ export default {
 
   },
   methods: {
+    startCall() {
+      window.location.href = "./call/"
+    },
     helpTypeName(id){
       return this.help_types[id].name
     },

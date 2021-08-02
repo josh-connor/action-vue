@@ -11,7 +11,7 @@
             <ul class="list-group list-group-flush">
               <template v-for="(action, index) in residentActions">
                 <li v-if="action.action_status !== '7'" class="list-group-item">
-                  <a href="">{{help_types[action.help_type].name}}</a> - {{readableDate(action)}}
+                  <a :href="'/actions/coordinator/action/?id='+action.id">{{help_types[action.help_type].name}}</a> - {{readableDate(action)}}
                   <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeAction(action.id, index)"></i></div>
                 </li>
               </template>
@@ -71,7 +71,8 @@ export default {
       action:{
         resident:-1,
         help_type:"",
-        volunteers_needed: "1",
+        minimum_volunteers:"1",
+        maximum_volunteers: "1",
         action_priority:"2",
         public_description:"",
         private_description:"",
@@ -106,6 +107,10 @@ export default {
   watch:{
     help_type_id: function(value){
       this.action.public_description = this.help_types[value].public_description_template
+      this.action.private_description = this.help_types[value].private_description_template
+      this.action.volunteer_requirements = this.help_types[value].requirements
+      this.action.minimum_volunteers = this.help_types[value].minimum_volunteers
+      this.action.maximum_volunteers = this.help_types[value].maximum_volunteers
     }
   },
   computed: {

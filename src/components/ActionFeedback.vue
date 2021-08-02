@@ -41,21 +41,9 @@ export default {
     volunteerName(id) {
       return this.Volunteers.find(vol => vol.pk === id)
     },
-    getFeedback: function(action_feedback_id_array) {
-      $.getJSON(
-        this.baseURL()+"/api/action_feedback/isin/"+action_feedback_id_array.toString()+"/",
-        response => {
-          if(response.next !== null) {
-            this.multiPageGetLoop(response.next, response.results, this.setData, "action_feedback")
-          } else {
-            this.$set(this, "action_feedback", response.results)
-          }
-        }
-      )
-    }
+    
   },
   created(){
-    this.getFeedback("1,2")
   }
 }
 </script>
