@@ -57,15 +57,13 @@ import AddActionForm from "./components/AddActionForm.vue"
 import AddReferralForm from "./components/AddReferralForm.vue"
 import AddTypeModal from "./components/AddTypeModal.vue"
 import SelectResident from "./components/SelectResident.vue"
-import ActionView from "./App.vue"
 export default {
   name: 'AddForm',
   components: {
     AddActionForm,
     AddTypeModal,
     AddReferralForm,
-    SelectResident,
-    ActionView
+    SelectResident
   },
   data() {
     return{

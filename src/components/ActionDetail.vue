@@ -2,53 +2,76 @@
   <div class="action-module card" id="actionDetils">
     <div class="card-header">
       <h2 class="card-title d-inline-block">Action Details</h2>
-      <div class="float-right btn-group">
+      <div class="float-right">
         <button v-if="!editable" class="btn btn-secondary" v-on:click="editable = true">Edit</button>
+      </div>
+      <div class="float-right btn-group">
         <button v-if="editable" class="btn btn-danger" v-on:click="discardDetails">Discard</button>
-        <button v-if="editable" class="btn btn-success" v-on:click="saveDetails">Save Changes</button>
+        <button v-if="editable" type="submit" class="btn btn-success" form="detailsForm">Save Changes</button>
       </div>
       
     </div>
     
     <div class="card-body">
-      <div class="row">
+      <form class="row needs-validation" id="detailsForm" novalidate @submit="saveDetails($event)">
         <div class="col-md-7 form-group">
           <div class="detail-field form-group">
-            <label class="col-form-label">Resident</label>
-            <div v-if="!editable">{{ activeResident.first_name }} {{ activeResident.last_name }}</div>
+            <label class="" for="name">Resident</label>
+            <a :href="'/actions/coordinator/resident/?id='+activeResident.id" class="text-info"><div v-if="!editable">{{ activeResident.first_name }} {{ activeResident.last_name }}</div></a>
             <input class="form-control" type="text" name="name" readonly disabled v-if="editable" v-model="fullName">
           </div>
           <div class="detail-field form-group"">
-            <label for="helpType" class="col-form-label">Action Type</label>
+            <label for="helpType" class="">Action Type</label>
             <div v-if="!editable">{{ HelpType }}</div>
             <select class="form-control" v-if="editable" id="helpType" v-model="action_details.help_type">
               <option v-for="type in helpTypes" :value="type.id">{{type.name}}</option>
             </select>
           </div>
-          <div class="detail-field form-group">
-            <label for="publicDescription" class="col-form-label">Public Description</label><button v-if="editable" class="btn float-right btn-secondary btn-sm" @click="CopyDefaultDescription('public')">Use Default</button><br>
+          <div class="detail-field form-group validate-me">
+            <label for="publicDescription" class="">Public Description</label><button v-if="editable" class="btn float-right btn-secondary btn-sm" type="button" @click="CopyDefaultDescription('public')">Use Default</button><br>
             <div v-if="!editable">{{ action_details.public_description }}</div>
-            <textarea class="form-control" id="publicDescription" rows="5" v-if="editable" type="textarea" v-model="action_details.public_description" name=""></textarea>
+            <textarea required class="form-control" id="publicDescription" rows="5" v-if="editable" type="textarea" v-model="action_details.public_description" name=""></textarea>
+            <div class="invalid-feedback">Must have public description</div>
           </div>
-          <div class="detail-field form-group">
-            <label for="privateDescription" class="col-form-label">Private Description</label><button v-if="editable" class="btn float-right btn-secondary btn-sm" @click="CopyDefaultDescription('private')">Use Default</button>
+          <div class="detail-field form-group validate-me">
+            <label for="privateDescription" class="">Private Description</label><button v-if="editable" class="btn float-right btn-secondary btn-sm" type="button" @click="CopyDefaultDescription('private')">Use Default</button>
             <div v-if="!editable">{{ action_details.private_description }}</div>
-            <textarea id="privateDescription" class="form-control" rows="5" v-if="editable" type="textarea" v-model="action_details.private_description" name=""></textarea>
+            <textarea required id="privateDescription" class="form-control no-validate" rows="5" v-if="editable" type="textarea" v-model="action_details.private_description" name=""></textarea>
+            <div class="invalid-feedback">Must have private description</div>
+          </div>
+          <div class="row form-group flex-wrap validate-me">
+            <div class="col-12 detail-field"><label class="">Number of Volunteers</label></div>
+            <div class="col detail-field">
+              <div class="row flex-wrap">
+                <label for="minimumVolunteers" class="col-form-label col-auto">Minimum</label>
+                <div class="col col-form-label" v-if="!editable">{{ action_details.minimum_volunteers }}</div>
+                <input v-if="editable" class="form-control col" type="number" name="minimumVolunteers" min="1" :max="action_details.maximum_volunteers"v-model="action_details.minimum_volunteers">
+                <div class="invalid-feedback col-12">Cannot be more than max or less than 1</div>
+              </div>
+            </div>
+            <div class="col detail-field">
+              <div class="row">
+                <label for="maximumVolunteers" class="col-form-label col-auto">Maximum</label>
+                <div class="col col-form-label" v-if="!editable">{{ action_details.maximum_volunteers }}</div>
+                <input v-if="editable" class="form-control col" type="number" :min="action_details.minimum_volunteers" name="maximumVolunteers" v-model="action_details.maximum_volunteers"><div class="invalid-feedback col-12">Cannot be less than min</div>
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="col">
           <div class="detail-field form-group">
-            <label for="dueDate" class="col-form-label">Due Date</label>
+            <label for="dueDate" class="">Due Date</label>
             <div v-if="!editable">{{ DueDate }}</div>
             <input v-if="editable" required type="date" class="form-control w-auto" id="dueDate" placeholder="" v-model="date">
           </div>
           <div class="detail-field form-group">
-            <label for="dueTime" class="col-form-label" >Due Time</label>
+            <label for="dueTime" class="" >Due Time</label>
             <div v-if="!editable">{{ DueTime }}</div>
             <input v-if="editable" required type="time" class="form-control w-auto" id="dueTime" placeholder="" v-model="time">
           </div>
           <div class="detail-field form-group">
-            <label for="actionPriority" class="col-form-label">Priority</label>
+            <label for="actionPriority" class="">Priority</label>
             <div v-if="!editable">{{ Priority }}</div>
             <div v-if="editable">
               <select id="actionPriority" name="actionPriority" class="form-control" v-model="action_details.action_priority">
@@ -59,7 +82,7 @@
             </div>
           </div>
           <div class="detail-field form-group">
-            <label for="volRequirements" class="col-form-label">Volunteer Requirements</label>
+            <label for="volRequirements" class="">Volunteer Requirements</label>
             <div>
               <ul v-if="!editable">
                 <li v-for="requirement in action_details.requirements">
@@ -68,13 +91,13 @@
               </ul>
               <div v-if="editable">
                 <div class="form-check" v-for="requirement in requirements">
-                  <input id="volRequirements" class="form-check-input" v-model="action_details.requirements" type="checkbox" :name="requirement.name" :id="requirement.name" :value="requirement.id"><label class="form-check-label" :for="requirement.name">{{ requirement.name }}</label>
+                  <input id="volRequirements" class="form-check-input class" v-model="action_details.requirements" type="checkbox" :name="requirement.name" :id="requirement.name" :value="requirement.id"><label class="form-check-label" :for="requirement.name">{{ requirement.name }}</label>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
@@ -159,13 +182,33 @@ export default {
       }
 
     },
-    discardDetails(){
+    discardDetails(){      
+      var validateGroup = document.getElementsByClassName('validate-me'); 
+      for (var i = 0; i < validateGroup.length; i++) {
+          validateGroup[i].classList.remove('was-validated');
+      }
       this.editable = false
       this.$emit("discard")
+
     },
-    saveDetails(){
-      this.editable = false
-      this.$emit("save")
+    saveDetails(e){
+      var validateGroup = document.getElementsByClassName('validate-me'); 
+      if (e.target.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        } else {
+          event.preventDefault();
+          event.stopPropagation();
+          this.editable = false
+          this.$emit("save")
+          for (var i = 0; i < validateGroup.length; i++) {
+              validateGroup[i].classList.remove('was-validated');
+          }
+        }
+      for (var i = 0; i < validateGroup.length; i++) {
+          validateGroup[i].classList.add('was-validated');
+      }
+      
     }
   },
   created() {

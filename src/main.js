@@ -1,7 +1,8 @@
 import Vue from 'vue'
+import _ from 'lodash'
 import AddActionRef from './AddForm.vue'
 import SelectCreateResident from './SelectCreateResident.vue'
-import SingleActionView from './App.vue'
+import SingleActionView from './SingleAction.vue'
 import Dashboard from './Dashboard.vue'
 import bootbox from "bootbox"
 import { loremIpsum } from "lorem-ipsum"
@@ -12,17 +13,25 @@ Vue.config.productionTip = false
 Vue.mixin({
     data(){
       return{
-        test: "test",
         action_priorities:{
-          1:"Low",
+          3:"High",
           2:"Normal",
-          3:"High"
+          1:"Low"
         },
         referral_statuses:{
           1: "Pending",
           2: "Contacted",
           3: "Completed"
         },
+        action_statuses:{
+          1:"Pending Volunteer Interest",
+          2:"Volunteer Interest",
+          3:"Volunteer Assigned",
+          4:"Ongoing",
+          5:"Completed",
+          6:"Couldn't Complete",
+          7:"No Longer Needed"
+        }
       }
     },
     methods:{
@@ -91,14 +100,25 @@ Vue.mixin({
           }
         )
       },
-      getReferalls: function(action_id_array) {
+      getReferrals: function(referral_id_array) {
+        const setReferralObject = (referral_array) =>{
+          for (var i = referral_array.length - 1; i >= 0; i--) {
+           this.$set(this.referrals, referral_array[i].id , referral_array[i])
+          }
+        }
+        var url
+        if(referral_id_array){
+          url = this.baseURL()+"/api/referrals/isin/"+referral_id_array.toString()+"/"
+        } else {
+          url = this.baseURL()+"/api/referrals/"
+        }
         $.getJSON(
-          this.baseURL()+"/api/referalls/isin/"+action_id_array.toString()+"/",
+          url,
           response => {
             if(response.next !== null) {
-              this.multiPageGetLoop(response.next, response.results, this.setData, "residentReferrals")
+              this.multiPageGetLoop(response.next, response.results, setReferralObject)
             } else {
-              this.$set(this, "residentReferrals", response.results)
+              setReferralObject(response.results)
             }
           }
         )
@@ -116,6 +136,23 @@ Vue.mixin({
               this.multiPageGetLoop(response.next, response.results, setHelpTypeObject)
             } else {
               setHelpTypeObject(response.results)
+            }
+          }
+        )
+      },
+      getReferralTypes: function(){
+        const setReferralTypeObject = (referral_types_array) =>{
+          for (var i = referral_types_array.length - 1; i >= 0; i--) {
+           this.$set(this.referral_types, referral_types_array[i].id , referral_types_array[i])
+          }
+        }
+        $.getJSON(
+          this.baseURL()+"/api/referraltypes/",
+          response => {
+            if(response.next !== null) {
+              this.multiPageGetLoop(response.next, response.results, setReferralTypeObject)
+            } else {
+              setReferralTypeObject(response.results)
             }
           }
         )
@@ -138,13 +175,18 @@ Vue.mixin({
         )
       },
       getResidents: function() {
+        const setResidentsObject = (residents_array) =>{
+          for (var i = residents_array.length - 1; i >= 0; i--) {
+           this.$set(this.residents, residents_array[i].id , residents_array[i])
+          }
+        }
         $.getJSON(
           this.baseURL()+"/api/residents",
           response => {
             if(response.next !== null) {
-              this.multiPageGetLoop(response.next, response.results, this.setData, "residents")
+              this.multiPageGetLoop(response.next, response.results, setResidentsObject)
             } else {
-              this.$set(this, "residents", response.results)
+              setResidentsObject(response.results)
             }
           }
         )

@@ -26,11 +26,9 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item" v-for="volunteer in filterAvailable" :key="volunteer.pk">
           <div class="btn-group float-right" role="group">
-            <button v-if="IsInterested(volunteer)" class="btn btn-danger" @click="$emit('removeInterest', volunteer)">Remove Interest</button>
-            <button v-if="!IsInterested(volunteer)" class="btn btn-primary" @click="$emit('addInterest',volunteer)">Add Interest</button>
             <button class="btn btn-success" v-on:click="$emit('assignVolunteer',volunteer)">Assign</button>
           </div>
-          <a class="text-info" href=""><div>{{ volunteer.first_name }} {{ volunteer.last_name }}</div></a>
+          <a class="text-info" :href="'/actions/coordinator/volunteer/?id='+volunteer.pk"><div>{{ volunteer.first_name }} {{ volunteer.last_name }}</div></a>
         </li>
       </ul>
     </div>

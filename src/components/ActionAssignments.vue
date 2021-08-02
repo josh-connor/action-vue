@@ -1,29 +1,22 @@
 <template>
   <div v-if="DataLoaded" class="action-module card" id="actionAssignments">
     <div class="card-header">
-      <h2 class="card-title">Status</h2>
+      <h2 class="card-title">Assigned</h2>
       <div></div>
     </div>    
     <div class="card-body">
-      <div class="row">
-        <label class="col col-auto col-form-label">Status</label>
-        <select class="form-control col" v-model="action_details.action_status">
-          <option v-for="value,key in statuses" :value="key">
-            {{value}}
-          </option>
-        </select>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label>Volunteers</label>
-          
+      <div class="d-flex flex-column h-100">
+        <div class="col-auto">
+          <div class="row">
+            <label class="col col-auto col-form-label">Status</label>
+          <select class="form-control col" v-model="action_details.action_status">
+            <option v-for="value,key in action_statuses" :value="key">
+              {{value}}
+            </option>
+          </select>
         </div>
-        <div class="col">
-          <div>{{ action_details.assigned_volunteers.length }}/{{ action_details.maximum_volunteers }}</div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col scroll-list-group p-2">
+        <div class="col scroll-list-group p-2 align-self-stretch">
           <ul id="assignedList" class="list-group">
             <li class="list-group-item" v-for="volunteer in AssignedVolunteers" :key="volunteer.id">
               <div class="appendable">
@@ -40,6 +33,9 @@
             <li v-for="item in action_details.maximum_volunteers - AssignedVolunteers.length" class="unassigned list-group-item disabled">Unassigned</li>
           </ul>
         </div>
+        <div class="col-auto ml-auto">
+          <div>Volunteers assigned: {{ action_details.assigned_volunteers.length }}/{{ action_details.maximum_volunteers }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -50,15 +46,7 @@ export default {
   name: 'ActionAssignments',
   data() {
     return {
-      statuses:{
-        1:"Pending Volunteer Interest",
-        2:"Volunteer Interest",
-        3:"Volunteer Assigned",
-        4:"Ongoing",
-        5:"Completed",
-        6:"Couldn't Complete",
-        7:"No Longer Needed"
-      }
+      
     }
   },
   props: {
@@ -115,7 +103,10 @@ export default {
 .scroll-list-group{
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  max-height: 400px;
+  flex-basis: 0;
+  max-height: 550px;
+  flex-shrink: 1;
+  flex-grow: 1;
   }
 .remove {
   color: red;

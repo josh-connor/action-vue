@@ -2,7 +2,7 @@
   <div id=""  v-if="DataLoaded" class="">
     <div class="row align-items-stretch">
       <div class="col-md-8 px-2">
-        <action-detail :action_details="action_details" :activeResident="activeResident" :helpTypes="helpTypes" @discard="refreshAction" @save="patchAction" class=""></action-detail>
+        <action-detail :action_details="action_details" :activeResident="activeResident" :helpTypes="help_types" @discard="refreshAction" @save="patchAction" class=""></action-detail>
       </div>
       <div class="col-md-4 px-2">
         <action-assignments :action_details="action_details" :Volunteers="volunteers_array" @unassignVolunteer="unassignVolunteer" @statusUpdate="patchStatus" class=""></action-assignments>
@@ -13,10 +13,10 @@
         <assign-volunteers :action_details="action_details" :Volunteers="volunteers_array" @removeInterest="removeInterest" @assignVolunteer="assignVolunteer" @addInterest="addInterest" class=""></assign-volunteers>
       </div>
       <div class="col-12 py-3 px-2">
-        <action-feedback :Action="action_details" :Volunteers="datadump.Volunteers" class="p-3"></action-feedback>
+        <action-feedback :Action="action_details" :Volunteers="volunteers_array" class="p-3"></action-feedback>
       </div>
     </div>
-    <div id="myModal"class="modal" tabindex="-1" role="dialog">
+    <div id="myModal"class="modal" tabindex="-1">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -43,9 +43,8 @@ import ActionAssignments from './components/ActionAssignments.vue'
 import AssignVolunteers from './components/AssignVolunteers.vue'
 import ActionFeedback from './components/ActionFeedback.vue'
 import PersonDetail from './components/PersonDetail.vue'
-import datadump from './data.json'
 export default {
-  name: 'App',
+  name: 'SingleAction',
   components: {
     ActionDetail,
     ActionAssignments,
@@ -55,9 +54,8 @@ export default {
   },
   data() {
     return{
-    datadump,
     action_details:{},
-    helpTypes:{},
+    help_types:{},
     activeResident:{},
     volunteers_array:[]
     }
@@ -98,10 +96,10 @@ export default {
     },
     assignVolunteer(volunteer) {
       var id = volunteer.pk
-      var newAssigned = this.action_details.assigned_volunteers
+      var newAssigned = $.extend( [], this.action_details.assigned_volunteers)
       newAssigned.push(id)
       const csrftoken = this.getCookie('csrftoken')
-      if (this.action_details.assigned_volunteers.length <= this.action_details.maximum_volunteers) {
+      if (newAssigned.length <= this.action_details.maximum_volunteers) {
         $.ajax({
             url: "/api/actions/"+this.action_details.id+"/",
             beforeSend: function(xhr) {
