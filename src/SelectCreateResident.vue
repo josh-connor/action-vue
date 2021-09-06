@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="container">
+    <div class="row"><a class="btn" href="../"><span class="fas fa-angle-left"></span></a></div>
     <div class="row">
       
       <div class="col">

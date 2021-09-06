@@ -12,7 +12,7 @@
               <template v-for="(action, index) in residentActions">
                 <li v-if="action.action_status !== '7'" class="list-group-item">
                   <a :href="'/actions/coordinator/action/?id='+action.id">{{help_types[action.help_type].name}}</a> - {{readableDate(action)}}
-                  <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeAction(action.id, index)"></i></div>
+                  <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeAction(action.id, index)">&times;</i></div>
                 </li>
               </template>
             </ul>
@@ -25,10 +25,12 @@
           <div class="card-body">
             <h3 class="card-title">New Referrals</h3>
             <ul class="list-group list-group-flush">
-              <li v-for="referral in newReferrals" class="list-group-item">
-                <a href="">{{}}</a>
-                <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeReferral(referral)"></i></div>
-              </li>
+              <template v-for="(referral, index) in filterReferrals">
+                <li v-if="action.referral_status !== '3'" class="list-group-item">
+                  <a :href="'/admin/actions/referral/'+referral.id+'/change/'">{{referral_types[referral.referral_type].name}}</a>
+                  <div class="float-right"><i class="btn text-danger" @click="removeReferral(referral.id)">&times;</i></div>
+                </li>
+              </template>
             </ul>
             <div class="text-right">
               <button class="btn btn-primary my-3" :disabled="buttonsDisabled == 1" @click="createNew = true; formName = 'referral'">Add New Referral</button>
@@ -42,7 +44,7 @@
           <add-action-form class="" :title="'Create New Action'" :action="action" :requirements="requirements" :active-resident="activeResident" :help_types="help_types" @new-action="addNewAction($event)" @discard-form="discardForm"></add-action-form>
         </div>
         <div v-if="createNew && formName == 'referral'" class="col-lg-7">
-          <add-referral-form class="" :title="'Create New Referral'"  @discard-form="discardForm" :action="action" :active-resident="activeResident" :referral="referral" :referralTypes="referralTypes" :organisations="organisations"  @new-referral="addNewReferral($event)"></add-referral-form>
+          <add-referral-form class="" :title="'Create New Referral'"  @discard-form="discardForm" :action="action" :active-resident="activeResident" :referral="referral" :referralTypes="referral_types" :organisations="organisations"  @new-referral="addNewReferral($event)"></add-referral-form>
         </div>
       </transition>
     </div>    
@@ -99,9 +101,10 @@ export default {
       residentActions: [],
       help_types: {},
       residentReferrals: [],
-      referralTypes:[],
+      referral_types:{},
       organisations:[],
-      requirements:{}
+      requirements:{},
+      referrals:{}
     }
   },
   watch:{
@@ -123,6 +126,12 @@ export default {
       } else {
         return 0
       }
+    },
+    filterReferrals () {
+      var refs = this.activeResident.requested_referrals
+      return this.residentReferrals.filter((referral) => {
+        return refs.includes(referral.id)
+      })
     }
   },
   methods: {
@@ -160,6 +169,7 @@ export default {
     addNewAction: function (e) {
       console.log(e)
       this.residentActions.push(e)
+      this.discardForm()
     },
     addNewHelpType: function(e) {
       this.help_types[e.id] = e
@@ -167,7 +177,9 @@ export default {
     },
     addNewReferral: function (e) {
       console.log(e)
+      this.activeResident.requested_referrals.push(e.id)
       this.residentReferrals.push(e)
+      this.discardForm()
     },
     setResident: function (e) {
       this.action.resident = e.id
@@ -197,7 +209,7 @@ export default {
     this.getResidents()
     this.getHelpTypes()
     this.getRequirements()
-    this.getList("referraltypes",(data)=>{this.setData(data, "referralTypes")})
+    this.getReferralTypes()
     const getOrganisations = await this.getList("organisations",(data)=>{this.setData(data, "organisations")})
     this.getList("referrals",(data)=>{this.setData(data, "residentReferrals")})
     var urlParams = new URLSearchParams(window.location.search)
