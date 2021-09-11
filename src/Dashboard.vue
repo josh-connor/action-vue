@@ -36,9 +36,9 @@
             </div>
             <div class="card-footer">
               <div class="d-flex">
-                <a v-for="num in pages">
+                <!-- <a v-for="num in pages">
                  {{num}}
-                </a>
+                </a> -->
               </div>
           </div>
         </div>
@@ -203,7 +203,7 @@
         </div>
         <div class="card">
           <div class="card-header">
-            <button class="btn btn-sm btn-link text-danger float-right" type="button" @click="clearFilters('actionTable')">Clear</button>
+            <button class="btn btn-sm btn-link text-danger float-right" type="button" @click="clearFilters('referralTable')">Clear</button>
             <h4 class="card-title">Referral Filters</h4>
           </div>
           <div class="card-body p-0">

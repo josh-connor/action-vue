@@ -1,7 +1,9 @@
 <template>
   <div id="addForm" class="">
     <div class="row">
-      <a class="btn" href="../"><span class="fas fa-angle-left"></span></a><div class="">Selected resident: {{activeResident.id}} - {{activeResident.first_name}} {{activeResident.last_name}}</div>
+      <div class="col"><a class="btn" href="../"><span class="fas fa-angle-left"></span></a></div>
+      <h2 class="col-auto">Selected resident: {{activeResident.first_name}} {{activeResident.last_name}}</h2>
+      <div class="col"><a class="btn btn-lg btn-danger float-right" href="/actions/coordinator">End Call</a></div>
     </div>
     <div class="row">
       <div class="col col-12 col-md-5">
@@ -12,7 +14,7 @@
               <template v-for="(action, index) in residentActions">
                 <li v-if="action.action_status !== '7'" class="list-group-item">
                   <a :href="'/actions/coordinator/action/?id='+action.id">{{help_types[action.help_type].name}}</a> - {{readableDate(action)}}
-                  <div class="float-right"><i class="btn text-danger fas fa-times" @click="removeAction(action.id, index)">&times;</i></div>
+                  <button class="float-right btn text-danger" @click="removeAction(action.id, index)"><i class="fa fa-times" ></i></button>
                 </li>
               </template>
             </ul>
@@ -28,7 +30,7 @@
               <template v-for="(referral, index) in filterReferrals">
                 <li v-if="action.referral_status !== '3'" class="list-group-item">
                   <a :href="'/admin/actions/referral/'+referral.id+'/change/'">{{referral_types[referral.referral_type].name}}</a>
-                  <div class="float-right"><i class="btn text-danger" @click="removeReferral(referral.id)">&times;</i></div>
+                  <button class="float-right btn text-danger" @click="removeReferral(referral.id)"><i class="fa fa-times"></i></button>
                 </li>
               </template>
             </ul>
@@ -68,6 +70,7 @@ export default {
   },
   data() {
     return{
+      coordinator:{},
       createNew: false,
       formName: "",
       action:{
@@ -82,8 +85,8 @@ export default {
         interested_volunteers: [],
         assigned_volunteers: [],
         requested_datetime: "",
-        added_by:3,
-        coordinator:3
+        added_by:"",
+        coordinator:""
       },
       referral:{
         resident:-1,
@@ -198,11 +201,24 @@ export default {
         interested_volunteers: [],
         assigned_volunteers: [],
         requested_datetime: "",
-        added_by:3,
-        coordinator:3
+        added_by:"",
+        coordinator:""
       }
+      this.referral = {
+        resident:-1,
+        referral_type:"",
+        referral_organisation:"",
+        notes:"",
+        status:1,
+        added_by:"",
+        coordinator:""
+      } 
       this.action.resident = this.activeResident.id
       this.referral.resident = this.activeResident.id
+      this.action.added_by = this.coordinator.id
+      this.action.coordinator = this.coordinator.id
+      this.referral.added_by = this.coordinator.id
+      this.referral.coordinator = this.coordinator.id
     }
   },
   async created () {
@@ -210,6 +226,7 @@ export default {
     this.getHelpTypes()
     this.getRequirements()
     this.getReferralTypes()
+    this.getCurrentCoordinator(this.setData(),"coordinator")
     const getOrganisations = await this.getList("organisations",(data)=>{this.setData(data, "organisations")})
     this.getList("referrals",(data)=>{this.setData(data, "residentReferrals")})
     var urlParams = new URLSearchParams(window.location.search)

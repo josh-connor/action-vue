@@ -93,6 +93,14 @@ Vue.mixin({
             }
          )
       },
+      getCurrentCoordinator: function(success, success_options) {
+        $.getJSON(
+            this.baseURL()+"/api/current_coordinator/",
+            response => {
+              success(response, ...success_options)
+            }
+         )
+      },
       getActions: function(action_id_array) {
         $.getJSON(
           this.baseURL()+"/api/actions/isin/"+action_id_array.toString()+"/",
