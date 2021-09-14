@@ -112,11 +112,12 @@ export default {
   },
   watch:{
     help_type_id: function(value){
+      if (value) {
       this.action.public_description = this.help_types[value].public_description_template
       this.action.private_description = this.help_types[value].private_description_template
       this.action.volunteer_requirements = this.help_types[value].requirements
       this.action.minimum_volunteers = this.help_types[value].minimum_volunteers
-      this.action.maximum_volunteers = this.help_types[value].maximum_volunteers
+      this.action.maximum_volunteers = this.help_types[value].maximum_volunteers}
     }
   },
   computed: {
@@ -170,7 +171,6 @@ export default {
       })
     },
     addNewAction: function (e) {
-      console.log(e)
       this.residentActions.push(e)
       this.discardForm()
     },
@@ -179,7 +179,6 @@ export default {
       this.action.help_type = e.id
     },
     addNewReferral: function (e) {
-      console.log(e)
       this.activeResident.requested_referrals.push(e.id)
       this.residentReferrals.push(e)
       this.discardForm()
@@ -192,7 +191,7 @@ export default {
       this.createNew = false
       this.action = {
         resident:-1,
-        help_type_id:"",
+        help_type:"",
         volunteers_needed: "1",
         action_priority:"2",
         public_description:"",
@@ -226,7 +225,14 @@ export default {
     this.getHelpTypes()
     this.getRequirements()
     this.getReferralTypes()
-    this.getCurrentCoordinator(this.setData(),"coordinator")
+    this.getCurrentCoordinator((data)=>{
+      console.log("Hello")
+      this.setData(data[0], "coordinator")
+      this.$set(this.action,"coordinator",data[0].id)
+      this.$set(this.action,"added_by",data[0].id)
+      this.$set(this.referral,"coordinator",data[0].id)
+      this.$set(this.referral,"added_by",data[0].id)
+    })
     const getOrganisations = await this.getList("organisations",(data)=>{this.setData(data, "organisations")})
     this.getList("referrals",(data)=>{this.setData(data, "residentReferrals")})
     var urlParams = new URLSearchParams(window.location.search)
