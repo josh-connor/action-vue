@@ -33,7 +33,7 @@
         <div class="row justify-content-center">
           <div class="col col-lg-10">
             <div class="card">
-              <new-resident-form class="card-body" :title="'Create New Resident'"></new-resident-form>
+              <new-resident-form class="card-body" :title="'Create New Resident'" @set-resident="setResident($event)"></new-resident-form>
             </div>
           </div>
         </div>

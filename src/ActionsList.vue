@@ -6,7 +6,7 @@
           <div class="row">
             <h3 class="col">Actions</h3>
             <div class="col-auto">
-              <button class="btn btn-primary float-right disabled" type="button" @click="">Add Action</button>
+              <!-- <button class="btn btn-primary float-right disabled" type="button" @click="">Add Action</button> -->
             </div>
           </div>
           <div class="">
@@ -123,13 +123,13 @@
           </div>
           <div class="card-footer">
             <div class="d-flex">
-              <ul class="pagination">
+              <!-- <ul class="pagination">
                 <li class="page-item"><a class="page-link" href="#">Previous</a></li>
                 <li class="page-item" v-for="num in pages">
                   <a class="page-link" href="#">{{num}}</a>
                 </li>
                 <li class="page-item"><a class="page-link" href="#">Next</a></li>
-              </ul>
+              </ul> -->
             </div>
         </div>
       </div>

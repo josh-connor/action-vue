@@ -191,9 +191,9 @@ export default {
         type:"POST",
         contentType:'application/json',
         data:resident,
-        success: function(response){
+        success: (response) => {
           console.log(response.id)
-          this.$emit('set-resident', {id:response.id})
+          this.$emit('set-resident', response.id)
         }
       })
           }

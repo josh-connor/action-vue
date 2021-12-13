@@ -43,7 +43,7 @@ Vue.mixin({
       baseURL: function(){
         return window.location.origin
       },
-      setData: function(data, target) {
+      setData: function(data, target, parent) {
           this.$set(this, target, data)
       },
       getCookie: function(name) {
@@ -88,6 +88,14 @@ Vue.mixin({
       getSingle: function(type, id, success, ...success_options) {
         $.getJSON(
             this.baseURL()+"/api/"+type+"/"+id+"/",
+            response => {
+              success(response, ...success_options)
+            }
+         )
+      },
+      getCurrentCoordinator: function(success, ...success_options) {
+        $.getJSON(
+            this.baseURL()+"/api/current_coordinator/",
             response => {
               success(response, ...success_options)
             }

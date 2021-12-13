@@ -1,9 +1,10 @@
 <template>
   <div id="app" class="container">
+    <div class="row"><a class="btn" href="../"><span class="fas fa-angle-left"></span></a></div>
     <div class="row">
       
       <div class="col">
-        <select-resident @set-resident="setResident" :Residents="resList"></select-resident>
+        <select-resident @set-resident="setResident" :Residents="residents"></select-resident>
       </div>
     
     </div>
@@ -50,7 +51,7 @@ export default {
       },
       newActions:[],
       newReferrals:[],
-      resList:[]
+      residents:[]
     }
   },
   computed: {
@@ -101,39 +102,10 @@ export default {
     },
     setActionType: function (e) {
       this.action.help_type = e.helptype
-    },
-    fetchResidents: function() {
-      $.getJSON(
-        "http://localhost:8000/api/residents",
-        response => {
-          this.resList = response.results
-        }
-        )
-      /*fetch("http://localhost:8000/api/residents", {
-          "method": "GET",
-          "headers": {
-            'Content-Type': 'application/json'
-          }
-      })
-      .then(response => { 
-          if(response.ok){
-              return response.json()    
-          } else{
-              alert("Server returned " + response.status + " : " + response.statusText);
-          }                
-      })
-      .then(response => {
-        this.resList = response.results
-          console.log(response.results) 
-      })
-      .catch(err => {
-          console.log(err);
-      });*/
     }
-
   },
   mounted () {
-    this.fetchResidents()
+    this.getResidents()
     var urlParams = new URLSearchParams(window.location.search)
     console.log(urlParams.get('search'))
   }
